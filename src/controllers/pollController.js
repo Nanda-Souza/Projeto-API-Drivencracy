@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { pollCollection } from '../config/database.js';
 
 
-export const createPool = (async (req, res) => {
+export const createPoll = (async (req, res) => {
     const { title } = req.body;
     let { expireAt } = req.body;
 
@@ -21,3 +21,17 @@ export const createPool = (async (req, res) => {
   }
 }
     )
+
+export async function listPolls (req, res) {
+          
+
+  try {   
+    
+    const listPolls = await pollCollection.find({ }).toArray() 
+    
+    return res.status(200).send(listPolls)
+
+  } catch (error) {
+  res.status(500).send(error)
+  }
+ }
