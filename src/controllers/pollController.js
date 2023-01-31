@@ -1,7 +1,10 @@
-export const createPool = (async (req, res) => {
-    const { title } = req.body;
+import dayjs from 'dayjs'
 
-    res.status(200).send("Enquete criada!")
+
+export const createPool = (async (req, res) => {
+    const { title, expireAt } = req.body;
+
+    res.status(201).send("Enquete criada!")
   
     
   })
