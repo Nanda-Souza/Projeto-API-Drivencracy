@@ -41,3 +41,27 @@ export const createChoice = (async (req, res) => {
   
 }
     )
+
+
+    export const getChoices = (async (req, res) => {        
+        const id = req.params.id;
+
+        try {
+
+            const existingPool = await pollCollection.findOne({_id: ObjectId(id)})
+    
+            if (!existingPool){
+                return res.status(404).send("Enquete invalida!")           
+            
+            }
+
+            const pollChoices = await choiceCollection.find({ pollId: id }).toArray() 
+            
+    
+            res.status(200).send(pollChoices)            
+        } catch (err) {
+            res.status(500).send(err);
+        }
+    }
+     
+)
