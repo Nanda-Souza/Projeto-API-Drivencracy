@@ -2,6 +2,7 @@ import dayjs from 'dayjs'
 import { ObjectId } from 'mongodb';
 import { choiceCollection } from '../config/database.js';
 import { pollCollection } from '../config/database.js';
+import { voteCollection } from '../config/database.js';
 
 
 export const createChoice = (async (req, res) => {
@@ -64,4 +65,38 @@ export const createChoice = (async (req, res) => {
         }
     }
      
+)
+
+export const voteChoice = (async (req, res) => {        
+    const id = req.params.id;
+
+    try {
+
+        const existingChoice = await choiceCollection.findOne({_id: ObjectId(id)})
+
+        if (!existingChoice){
+            return res.status(404).send("Opção invalida!")           
+        
+        }
+        
+        const poll = await pollCollection.findOne({_id: ObjectId(existingChoice.pollId)})
+        
+        if (dayjs().isAfter(poll.expireAt)){
+            return res.status(403).send("Enquete não expirada!")
+
+        }
+        
+        
+        await voteCollection.insertOne(
+            {choiceId: ObjectId(id),
+             createdAt: dayjs().format("YYYY-MM-DD HH:mm")})
+        
+        
+
+        res.status(201).send("Voto registrado com sucesso!")            
+    } catch (err) {
+        res.status(500).send(err);
+    }
+}
+ 
 )
