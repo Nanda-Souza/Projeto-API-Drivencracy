@@ -1,4 +1,5 @@
 import dayjs from 'dayjs'
+import { ObjectId } from 'mongodb';
 import { pollCollection } from '../config/database.js';
 
 
@@ -35,3 +36,25 @@ export async function listPolls (req, res) {
   res.status(500).send(error)
   }
  }
+
+
+ export const pollResult = (async (req, res) => {        
+  const id = req.params.id;
+
+  try {
+
+   
+    const existingPoll = await pollCollection.findOne({_id: ObjectId(id)})
+    
+    if (!existingPoll){
+      return res.status(404).send("Opção inválida!")           
+  
+  }
+
+      res.status(200).send("Xablau!")            
+  } catch (err) {
+      res.status(500).send(err);
+  }
+}
+
+)

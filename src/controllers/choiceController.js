@@ -14,7 +14,7 @@ export const createChoice = (async (req, res) => {
         const existingPool = await pollCollection.findOne({_id: ObjectId(pollId)})
 
         if (!existingPool){
-            return res.status(404).send("Enquete invalida!")
+            return res.status(404).send("Enquete inválida!")
         }
 
         if (dayjs().isAfter(existingPool.expireAt)){
@@ -52,7 +52,7 @@ export const createChoice = (async (req, res) => {
             const existingPool = await pollCollection.findOne({_id: ObjectId(id)})
     
             if (!existingPool){
-                return res.status(404).send("Enquete invalida!")           
+                return res.status(404).send("Enquete inválida!")           
             
             }
 
@@ -75,7 +75,7 @@ export const voteChoice = (async (req, res) => {
         const existingChoice = await choiceCollection.findOne({_id: ObjectId(id)})
 
         if (!existingChoice){
-            return res.status(404).send("Opção invalida!")           
+            return res.status(404).send("Opção inválida!")           
         
         }
         
