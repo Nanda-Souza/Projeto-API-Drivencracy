@@ -1,6 +1,8 @@
 import dayjs from 'dayjs'
 import { ObjectId } from 'mongodb';
 import { pollCollection } from '../config/database.js';
+import { choiceCollection } from '../config/database.js';
+import { voteCollection } from '../config/database.js';
 
 
 export const createPoll = (async (req, res) => {
@@ -40,8 +42,12 @@ export async function listPolls (req, res) {
 
  export const pollResult = (async (req, res) => {        
   const id = req.params.id;
+ 
 
   try {
+    
+    let result = {
+    title: "Por enquanto nenhuma das opções é a  mais votada", votes: 0 };
 
    
     const existingPoll = await pollCollection.findOne({_id: ObjectId(id)})
@@ -51,7 +57,29 @@ export async function listPolls (req, res) {
   
   }
 
-      res.status(200).send("Xablau!")            
+    const pollChoices = await choiceCollection.find({ pollId: ObjectId(id) }).toArray()
+
+    
+    for (const choice of pollChoices) {
+      const votesCount = await voteCollection.countDocuments({ choiceId: ObjectId(choice._id) })
+
+      if (votesCount > result.votes ){
+        result.title = choice.title
+        result.votes = votesCount;
+
+      }
+
+    }
+
+    const mostVoted = {
+      _id: id,
+      title: existingPoll.title,
+      expireAt: existingPoll.expireAt,
+      result
+    }
+    
+    
+      res.status(200).send(mostVoted)            
   } catch (err) {
       res.status(500).send(err);
   }
