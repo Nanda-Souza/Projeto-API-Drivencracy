@@ -31,7 +31,7 @@ export const createChoice = (async (req, res) => {
         
         await choiceCollection.insertOne(
             {title,
-            pollId})
+            pollId: ObjectId(pollId)})
         
         res.status(201).send("Opção cadastrada com sucesso!");    
     } catch (err) {
@@ -55,7 +55,7 @@ export const createChoice = (async (req, res) => {
             
             }
 
-            const pollChoices = await choiceCollection.find({ pollId: id }).toArray() 
+            const pollChoices = await choiceCollection.find({ pollId: ObjectId(id) }).toArray() 
             
     
             res.status(200).send(pollChoices)            
